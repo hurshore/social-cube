@@ -1,0 +1,17 @@
+.App {
+  background-color: #f4f7f8;
+  min-height: 100vh;
+}
+
+.App.dark {
+  background-color: #05031c;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
