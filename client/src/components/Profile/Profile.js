@@ -1,18 +1,20 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { compressImage } from '../../shared/utility';
+import * as actions from '../../store/actions';
+import Skeleton from 'react-loading-skeleton';
 //Components
 import Followers from '../Followers/Followers';
 import Following from '../Following/Following';
-import CustomButton from '../UI/CustomButton/CustomButton';
 import EditProfile from './EditProfile';
 //MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 //Icons
-import EditIcon from '@material-ui/icons/Edit';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import LinkIcon from '@material-ui/icons/Link';
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -53,6 +55,45 @@ const styles = (theme) => ({
     bottom: -11,
     right: -18,
     cursor: 'pointer'
+  },
+  name: {
+    display: 'flex',
+    
+  },
+  fullName: {
+    fontSize: '1.2rem'
+  },
+  handle: {
+    color: 'rgb(101, 119, 134)',
+    fontSize: '.9rem'
+  },
+  bio: {
+    fontSize: '.9rem',
+    margin: '.7rem 0'
+  },
+  location: {
+    color: 'rgb(101, 119, 134)',
+    marginRight: '.7rem',
+    display: 'flex',
+    '& svg': {
+      marginRight: '.4rem',
+      fontSize: '1.2rem'
+    }
+  },
+  otherDetails: {
+    display: 'flex',
+    alignItems: 'center',
+    flexFlow: 'column',
+    [theme.breakpoints.up('sm')]: {
+      flexFlow: 'row',
+      justifyContent: 'center'
+    }
+  },
+  website: {
+    display: 'flex',
+    '& svg': {
+      marginRight: '.4rem'
+    }
   }
 })
 
@@ -61,29 +102,23 @@ const Profile = (props) => {
   const following = props.authUserFollowing.find((user) => {
     return user === handle;
   })
-  const imageInput = useRef(null);
-  const backgroundInput = useRef(null);
 
-  const handleImageChange = () => {
-    compressImage(imageInput.current.files[0])
-      .then((compressedImage) => {
-        props.uploadImage(compressedImage);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+  const followUser = () => {
+    const data = {
+      followHandle: handle,
+      followingHandle: props.userHandle,
+      FBIdToken: props.FBIdToken
+    }
+    props.followUser(data);
   }
 
-  const handleEditPicture = () => {
-    imageInput.current.click();
-  }
-
-  const handleBackgroundChage = () => {
-
-  }
-
-  const handleEditBackground = () => {
-
+  const unfollowUser = () => {
+    const data = {
+      unfollowHandle: handle,
+      unfollowingHandle: props.userHandle,
+      FBIdToken: props.FBIdToken
+    }
+    props.unfollowUser(data);
   }
 
   return (
@@ -93,31 +128,44 @@ const Profile = (props) => {
       </div>
       <div className={classes.userImageWrapper}>
         <Avatar alt={fullName} src={imageUrl} className={classes.userImage} />
-        {/* <CustomButton btnClassName={classes.editImage} clicked={handleEditPicture} title="Edit profile picture">
-          <EditIcon />
-        </CustomButton> */}
-        <EditProfile />
-        <input
-          type="file"
-          ref={imageInput}
-          accept="image/*"
-          hidden="hidden"
-          onChange={handleImageChange}
-        />
+        {
+          handle === props.userHandle ? <EditProfile /> : null
+        }
       </div>
       <div className={classes.userDetails}>
-        <Typography component="h1">
-          {fullName}
-          <Typography variant="body2">{`@${handle}`}</Typography>
-        </Typography>
-        <Followers followerCount={props.profile.followerCount} followers={props.followers} />
-        <Following followingCount={props.profile.followingCount} following={props.following} />
+        <Typography component="h1" className={classes.fullName}>
+            {fullName || <Skeleton />}
+          </Typography>
+        <Typography variant="body1" className={classes.handle}>{`@${handle}`}</Typography>
+        {props.profile.bio ? 
+          <Typography variant="body2" component="p" className={classes.bio}>{props.profile.bio}</Typography> : null
+        }
+        <div className={classes.otherDetails}>
+          {props.profile.location ? 
+            (
+              <Typography variant="body2" component="p" className={classes.location}>
+                <LocationOnIcon className={classes.locationIcon} />
+                {props.profile.location}
+              </Typography> 
+            ) : null
+          }
+          {props.profile.website ? 
+            <Link href={props.profile.website} className={classes.website} color="primary">
+              <LinkIcon />
+              {props.profile.website}
+            </Link> : null  
+          }
+        </div>
+        <div>
+          <Followers followerCount={props.profile.followerCount} followers={props.followers} />
+          <Following followingCount={props.profile.followingCount} following={props.following} />
+        </div>
         {
           handle === props.userHandle ? null :
             following ? (
-              <Button color="secondary" variant="contained" onClick={props.unfollow}>Unfollow</Button>
+              <Button color="secondary" variant="contained" onClick={unfollowUser}>Unfollow</Button>
             ) : (
-              <Button color="primary"  variant="contained" onClick={props.follow}>Follow</Button>
+              <Button color="primary"  variant="contained" onClick={followUser}>Follow</Button>
             )
         }
       </div>
@@ -128,8 +176,19 @@ const Profile = (props) => {
 const mapStateToProps = (state) => {
   return {
     userHandle: state.user.credentials.handle,
-    authUserFollowing: state.user.following
+    authUserFollowing: state.user.following,
+    profile: state.profile.credentials,
+    followers: state.profile.followers,
+    following: state.profile.following,
+    FBIdToken: state.auth.FBIdToken
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    followUser: (payload) => (dispatch(actions.followUser(payload))),
+    unfollowUser: (payload) => (dispatch(actions.unfollowUser(payload))),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));

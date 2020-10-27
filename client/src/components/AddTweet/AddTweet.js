@@ -3,7 +3,6 @@ import { dataURItoBlob } from '../../shared/utility';
 import * as actions from '../../store/actions';
 import { compressImage } from '../../shared/utility';
 import { connect } from 'react-redux';
-import imageCompression from 'browser-image-compression';
 //Components
 import CustomButton from '../UI/CustomButton/CustomButton';
 //MUI stuff

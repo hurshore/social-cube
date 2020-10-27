@@ -56,19 +56,19 @@ const reducer = (state = initialState, action) => {
         ...state,
         likes: state.likes.filter((like) => like.tweetId !== action.payload.tweetId)
       }
-    case actionTypes.FOLLOW_USER:
+    case actionTypes.FOLLOW_USER_SUCCESS:
       console.log(action.payload);
       const following = [
         ...state.following,
-        action.payload.handle
+        action.payload.followHandle
       ]
       return {
         ...state,
         following
       }
-    case actionTypes.UNFOLLOW_USER:
+    case actionTypes.UNFOLLOW_USER_SUCCESS:
       console.log(action.payload)
-      const newFollowing = state.following.filter((user) => user !== action.payload.handle)
+      const newFollowing = state.following.filter((user) => user !== action.payload.unfollowHandle)
       return {
         ...state,
         following: newFollowing

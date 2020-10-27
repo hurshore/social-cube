@@ -93,6 +93,15 @@ function App(props) {
   }, [onTryAutoLogin]);
 
   useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    if(theme === 'dark') {
+      themeContext.setPreferredTheme('dark');
+    } else if (theme === 'light') {
+      themeContext.setPreferredTheme('light');
+    }
+  }, [])
+
+  useEffect(() => {
     if(authenticated && FBIdToken) {
       getAuthenticatedUserData(FBIdToken);
     }

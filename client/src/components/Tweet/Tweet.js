@@ -4,6 +4,7 @@ import * as actions from '../../store/actions';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 //Components
 import TweetDialog from './TweetDialog';
 import CustomSnackbar from '../UI/CustomSnackbar/CustomSnackbar';
@@ -36,14 +37,13 @@ const styles = (theme) => ({
     '&:first-child': {
       marginTop: 0
     },
-    ['@media (min-width: 860px)']: {
-      maxWidth: '100%'
-    }
+    // ['@media (min-width: 860px)']: {
+    //   maxWidth: '100%'
+    // }
   },
-  // media: {
-  //   height: 0,
-  //   paddingTop: '56.25%', // 16:9
-  // },
+  media: {
+    height: '56.25%',
+  },
   body: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -121,20 +121,24 @@ const Tweet = (props) => {
     setDeleteDialogOpen(false);
   }
 
+  const redirectToUser = () => {
+    props.history.push(`/users/${props.userHandle}`)
+  }
+
   return (
     <Card className={classes.tweet}>
       <CardHeader
         avatar={
-          <Avatar aria-label="user image">
-            <img src={props.userImageUrl} alt="user" />
-          </Avatar>
+          <Avatar src={props.userImageUrl} alt="user" onClick={redirectToUser} />
         }
         action={
           <IconButton aria-label="settings"  onClick={handleClick}>
             <MoreVertIcon />
           </IconButton>
         }
-        title={props.userHandle}
+        title={
+          <Typography onClick={redirectToUser}>{props.userHandle}</Typography>
+        }
         subheader={dayjs(props.createdAt).fromNow()}
       />
       <Menu
@@ -149,7 +153,7 @@ const Tweet = (props) => {
           <MenuItem onClick={deleteDialogOpenHandler}>Delete tweet</MenuItem> : null
         }
         <form className={classes.clipboard}>
-          <textarea ref={textAreaRef} value={`/users/${props.userHandle}/tweet/${props.tweetId}`} onChange={function(){}} />
+          <textarea ref={textAreaRef} value={`${document.location.host}/users/${props.userHandle}/tweet/${props.tweetId}`} onChange={function(){}} />
         </form>
       </Menu>
       <CardMedia
@@ -211,4 +215,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Tweet));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(Tweet)));

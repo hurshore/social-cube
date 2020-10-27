@@ -1,6 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { withRouter } from 'react-router-dom';
 //MUI Icons
 import CommentIcon from '@material-ui/icons/Comment';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -14,10 +15,7 @@ const styles = (theme) => ({
     display: 'flex',
     padding: '.8rem',
     backgroundColor: theme.palette.type === 'dark' ? '#252525': '#d8d8d8',
-    marginBottom: '.1rem'
-  },
-  message: {
-    paddingLeft: '.5rem'
+    margin: '.2rem .4rem'
   },
   read: {
     backgroundColor: '#79797966'
@@ -27,6 +25,12 @@ const styles = (theme) => ({
   },
   personIcon: {
     color: '#8d14b3'
+  },
+  message: {
+    display: 'flex',
+    '& svg': {
+      marginRight: '.3rem'
+    }
   }
 })
 
@@ -37,29 +41,52 @@ const notification = (props) => {
   if(props.read) {
     attachedClasses = [classes.notification, classes.read]
   }
+  
+  const notificationClickHandler = (event, tweetId, recipient, sender) => {
+    console.log(event.target.id);
+    switch(event.target.id) {
+      case 'like':
+      case 'comment':
+        props.history.push(`/users/${recipient}/tweet/${tweetId}`);
+        break;
+      case 'follow':
+        props.history.push(`/users/${sender}`);
+        break;
+      default: return;
+    }
+  }
 
   return (
     <div className={attachedClasses.join(' ')}>
       {
         props.type === 'like' ? (
-          <React.Fragment>
+          <Typography id="like" 
+          variant="body1" 
+          className={classes.message}
+          onClick={(event) => notificationClickHandler(event, props.tweetId, props.recipient)}>
             <FavoriteIcon className={classes.favoriteIcon} />
-            <Typography variant="body1" className={classes.message}>{`${props.sender} liked your tweet ${dayjs(props.createdAt).fromNow()}`}</Typography>
-          </React.Fragment>
+            {`${props.sender} liked your tweet ${dayjs(props.createdAt).fromNow()}`}
+          </Typography>
         ) : props.type === 'comment' ? (
-          <React.Fragment>
-            <CommentIcon color="primary" />
-            <Typography variant="body1" className={classes.message}>{`${props.sender} commented on your tweet ${dayjs(props.createdAt).fromNow()}`}</Typography>
-          </React.Fragment>
+          <Typography id="comment"
+          variant="body1" 
+          className={classes.message}
+          onClick={(event) => notificationClickHandler(event, props.tweetId, props.recipient)}>
+            <CommentIcon color="primary" className={classes.commentIcon} />
+            {`${props.sender} commented on your tweet ${dayjs(props.createdAt).fromNow()}`}
+          </Typography>
         ) : (
-          <React.Fragment>
+          <Typography id="follow" 
+          variant="body1" 
+          className={classes.message} 
+          onClick={(event) => notificationClickHandler(event, null, null, props.sender)}>
             <PersonAddIcon className={classes.personIcon} />
-            <Typography variant="body1" className={classes.message}>{`${props.sender} followed you ${dayjs(props.createdAt).fromNow()}`}</Typography>
-          </React.Fragment>
+            {`${props.sender} followed you ${dayjs(props.createdAt).fromNow()}`}
+          </Typography>
         )
       }
     </div>
   )
 }
 
-export default withStyles(styles)(notification);
+export default withStyles(styles)(withRouter(notification));

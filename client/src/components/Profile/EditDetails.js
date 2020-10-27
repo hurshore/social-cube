@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions';
 
+//Components
+import CustomSnackbar from '../UI/CustomSnackbar/CustomSnackbar';
 //MUI stuff
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,11 +12,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import withStyles from '@material-ui/core/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 
 const styles = (theme) => ({
   ...theme.spreadThis,
   dialogBody: {
     padding: '1rem',
+    textAlign: 'center'
   },
   title: {
     padding: 0
@@ -32,12 +38,16 @@ const EditDetails = (props) => {
     location: '',
     website: ''
   })
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { classes } = props;
 
   const openHandler = () => {
     setState({
       ...state,
-      isOpen: true
+      isOpen: true,
+      bio: props.credentials.bio,
+      location: props.credentials.location,
+      website: props.credentials.website
     })
   }
 
@@ -46,6 +56,14 @@ const EditDetails = (props) => {
       ...state,
       isOpen: false
     })
+  }
+
+  const snackbarOpenHandler = () => {
+    setSnackbarOpen(true);
+  }
+
+  const snackbarCloseHandler = () => {
+    setSnackbarOpen(false);
   }
 
   const inputChangeHandler = (event) => {
@@ -57,7 +75,18 @@ const EditDetails = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    //Submit form
+    snackbarOpenHandler();
+    const data = {
+      bio: state.bio,
+      location: state.location,
+      website: state.website,
+      FBIdToken: props.FBIdToken
+    }
+    props.editProfileDetails(data);
+    setState({
+      ...state,
+      isOpen: false
+    })
   }
 
   return (
@@ -103,14 +132,29 @@ const EditDetails = (props) => {
                 onChange={inputChangeHandler}
                 value={state.website}
                 className={classes.textField}
-                inputProps={{ maxLength: 20 }}
+                inputProps={{ maxLength: 30 }}
               />
+              <Button type="submit" color="primary" variant="contained">Save</Button>
             </form>
           </DialogContent>
         </Paper>
       </Dialog>
+      <CustomSnackbar open={snackbarOpen} clicked={snackbarCloseHandler} message="Uploading details..." />
     </React.Fragment>
   )
 }
 
-export default withStyles(styles)(EditDetails);
+const mapStateToProps = (state) => {
+  return {
+    FBIdToken: state.auth.FBIdToken,
+    credentials: state.profile.credentials
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    editProfileDetails: (payload) => dispatch(actions.editProfileDetails(payload))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EditDetails));

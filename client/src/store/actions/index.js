@@ -24,9 +24,11 @@ export {
   followUser,
   unfollowUser,
   markUnreadNotifications,
-  uploadUserImage
 } from './user';
 
 export {
-  fetchProfileDetails
+  fetchProfileDetails,
+  uploadUserImage,
+  uploadBackgroundImage,
+  editProfileDetails
 } from './profile';

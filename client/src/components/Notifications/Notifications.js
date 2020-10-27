@@ -44,12 +44,15 @@ const Notifications = (props) => {
         {props.notifications.length > 0 ?
           props.notifications.map((notification) => (
             <Notification 
-            key={notification.notificationId} 
-            type={notification.type}
-            sender={notification.sender}
-            createdAt={notification.createdAt}
-            read={notification.read}
-            />)
+              key={notification.notificationId} 
+              type={notification.type}
+              sender={notification.sender}
+              recipient={notification.recipient}
+              tweetId={notification.tweetId}
+              createdAt={notification.createdAt}
+              read={notification.read}
+            />
+          )
           ) : <Typography variant="p">Nothing to see here<span role="img" aria-label="eyes">👀</span></Typography>
         }
       </SwipeableDrawer>

@@ -5,6 +5,7 @@ import * as actions from '../../store/actions';
 import { connect } from 'react-redux';
 //Components
 import Tweet from '../../components/Tweet/Tweet';
+import TweetSkeleton from '../../components/Tweet/TweetSkeleton';
 //MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -21,22 +22,10 @@ class Tweets extends Component {
     return (
       <React.Fragment>
         {
-          // !this.props.loading ? (
-          //   this.props.tweets.map((tweet) => (
-          //     <Tweet key={tweet.tweetId}
-          //       tweetId={tweet.tweetId}
-          //       body={tweet.body}
-          //       commentCount={tweet.commentCount}
-          //       likeCount={tweet.likeCount}
-          //       createdAt={tweet.createdAt}
-          //       tweetImageUrl={tweet.tweetImageUrl}
-          //       userImageUrl={tweet.userImageUrl}
-          //       userHandle={tweet.userHandle}
-          //     />
-          //   ))
-          // ) : <p>Loading..</p>
           this.props.loading ? (
-            <p>Loading...</p>
+            Array(4).fill().map((item, index) => (
+              <TweetSkeleton key={index} />
+            ))
           ) : !this.props.tweetIdParam ? (
             this.props.tweets.map((tweet) => (
               <Tweet key={tweet.tweetId}
@@ -82,7 +71,9 @@ class Tweets extends Component {
           })
         }
       </React.Fragment>
-
+      // <React.Fragment>
+      //   <TweetSkeleton />
+      // </React.Fragment>
     )
   }
 }

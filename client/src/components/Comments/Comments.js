@@ -3,6 +3,7 @@ import Comment from './Comment/Comment';
 //MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -23,7 +24,12 @@ const comments = (props) => {
 
   return (
     <div className={classes.comments}>
-      <Typography variant="body1" className={classes.tweetBody}>{props.tweetBody}</Typography>
+      <div>
+        <Typography variant="body1" className={classes.tweetBody}>
+          {props.tweetBody}
+        </Typography>
+        <Divider />
+      </div>
       {props.comments.map((comment) => (
         <Comment key={comment.createdAt}  comment={comment} />
       ))}
