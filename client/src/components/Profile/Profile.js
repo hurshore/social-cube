@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
-import Skeleton from 'react-loading-skeleton';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 //Components
 import Followers from '../Followers/Followers';
 import Following from '../Following/Following';
@@ -134,9 +134,17 @@ const Profile = (props) => {
       </div>
       <div className={classes.userDetails}>
         <Typography component="h1" className={classes.fullName}>
-            {fullName || <Skeleton />}
-          </Typography>
-        <Typography variant="body1" className={classes.handle}>{`@${handle}`}</Typography>
+            {fullName || <Skeleton width={120} />}
+        </Typography>
+        <SkeletonTheme color={'rgb(101, 119, 134)'}>
+          {
+            handle ? (
+            <Typography variant="body1" className={classes.handle}>
+              {`@${handle}`}
+            </Typography>
+            ) : <Skeleton width={50} />
+          }
+        </SkeletonTheme>
         {props.profile.bio ? 
           <Typography variant="body2" component="p" className={classes.bio}>{props.profile.bio}</Typography> : null
         }

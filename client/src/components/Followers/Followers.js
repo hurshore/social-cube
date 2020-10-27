@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
 //Components
 import ListItemLink from '../UI/ListItemLink/ListItemLink';
 //MUI stuff
@@ -18,6 +18,10 @@ const styles = (theme) => ({
   },
   empty: {
     padding: '.5rem'
+  },
+  followButton: {
+    marginRight: '.5rem',
+    display: 'inline-block'
   }
 })
 
@@ -35,7 +39,15 @@ const Followers = (props) => {
   
   return (
     <React.Fragment>
-      <Button onClick={openHandler}>{props.followerCount !== 1 ? `${props.followerCount} followers` : `${props.followerCount} follower`}</Button>
+      <div className={classes.followButton}>
+        {
+          props.followerCount > -1 ? (
+            <Button onClick={openHandler}>
+              {props.followerCount !== 1 ? `${props.followerCount} followers` : `${props.followerCount} follower`}
+            </Button>
+          ) : <Skeleton width={100} height={20} />
+        }
+      </div>
       <Dialog open={isOpen} onClose={closeHandler}>
         <Paper className={classes.followersWrapper}>
           <List>
@@ -51,9 +63,4 @@ const Followers = (props) => {
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-
-  }
-}
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Followers));
+export default withStyles(styles)(Followers);

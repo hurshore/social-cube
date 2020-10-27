@@ -42,7 +42,10 @@ const styles = (theme) => ({
     // }
   },
   media: {
-    height: '56.25%',
+    // height: '56.25%',
+    [theme.breakpoints.up('sm')]: {
+      height: '300px'
+    }
   },
   body: {
     textOverflow: 'ellipsis',

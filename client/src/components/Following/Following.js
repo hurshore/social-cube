@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
 //Components
 import ListItemLink from '../UI/ListItemLink/ListItemLink';
 //MUI stuff
@@ -35,7 +35,11 @@ const Following = (props) => {
   
   return (
     <React.Fragment>
-      <Button onClick={openHandler}>{`${props.followingCount} following`}</Button>
+      {
+        props.followingCount > -1 ? (
+          <Button onClick={openHandler}>{`${props.followingCount} following`}</Button>
+        ) : <Skeleton width={100} height={20} />
+      }
       <Dialog open={isOpen} onClose={closeHandler}>
         <Paper className={classes.followingWrapper}>
           <List>
@@ -51,10 +55,4 @@ const Following = (props) => {
   )
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-
-  }
-}
-
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Following));
+export default withStyles(styles)(Following);

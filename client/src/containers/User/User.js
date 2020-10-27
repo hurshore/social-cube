@@ -23,16 +23,12 @@ class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {},
-      followers: [],
-      following: [],
       handle: this.props.match.params.handle,
       tweetIdParam: null
     }
   }
 
   componentDidMount() {
-    // this.fetchUserDetails();
     const handle = this.props.match.params.handle;
     this.props.fetchProfileDetails(handle);
     const tweetId = this.props.match.params.tweetId;
@@ -42,32 +38,8 @@ class User extends Component {
     }
   }
 
-  fetchUserDetails = () => {
-    const handle = this.props.match.params.handle;
-    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${handle}`)
-      .then(async (res) => {
-        if(res.ok) {
-          const data = await res.json();
-          this.setState({
-            profile: data.user, 
-            followers: data.followers,
-            following: data.following
-          });
-          this.props.setTweets(data.tweets);
-          console.log(data);
-        } else {
-          const err = await res.clone().json();
-          throw err;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if(prevState.handle !== this.state.handle) {
-      // this.fetchUserDetails();
       const handle = this.props.match.params.handle;
       this.props.fetchProfileDetails(handle);
     }
@@ -91,74 +63,11 @@ class User extends Component {
     return null;
   }
 
-  followUser = (handle) => {
-    const profile = {...this.state.profile};
-    const followers = [...this.state.followers];
-    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${handle}/follow`, {
-      headers: {
-        'Authorization': this.props.FBIdToken
-      }
-    })
-    .then(async (res) => {
-      if(res.ok) {
-        const data = await res.json();
-        console.log(data);
-        profile.followerCount += 1;
-        followers.push(this.props.userHandle);
-        this.setState({
-          profile,
-          followers
-        })
-        this.props.followUser(handle);
-      } else {
-        const err = await res.clone().json();
-        throw err;
-      }
-      
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  unfollowUser = (handle) => {
-    const profile = {...this.state.profile};
-    const followers = [...this.state.followers];
-    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${handle}/unfollow`, {
-      headers: {
-        'Authorization': this.props.FBIdToken
-      }
-    })
-    .then(async (res) => {
-      if(res.ok) {
-        const data = await res.json();
-        console.log(data);
-        profile.followerCount -= 1;
-        const index = followers.indexOf(this.props.userHandle);
-        followers.splice(index, 1);
-        this.setState({
-          profile,
-          followers
-        })
-        this.props.unfollowUser(handle);
-      } else {
-        const err = await res.clone().json();
-        throw err;
-      }
-      
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
   render() {
     const { classes } = this.props;
     return (
       <React.Fragment>
         <Profile
-          follow={() => this.followUser(this.state.profile.handle)}
-          unfollow={() => this.unfollowUser(this.state.profile.handle)}
           uploadImage={this.uploadUserImage}
           uploadBackground={this.uploadBackgroundImage}
         />
@@ -170,23 +79,10 @@ class User extends Component {
   };
 }
 
-const mapStateToProps = (state) => {
-  return {
-    FBIdToken: state.auth.FBIdToken,
-    userHandle: state.user.credentials.handle,
-    followers: state.profile.followers,
-    following: state.profile.following
-  }
-}
-
 const mapDispatchToProps = (dispatch) => {
   return {
-    setTweets: (payload) => dispatch(actions.fetchTweetsSuccess(payload)),
-    followUser: (handle) => (dispatch(actions.followUser(handle))),
-    unfollowUser: (handle) => (dispatch(actions.unfollowUser(handle))),
-    getUserData: (FBIdToken) => (dispatch(actions.getUserData(FBIdToken))),
     fetchProfileDetails: (handle) => (dispatch(actions.fetchProfileDetails(handle)))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(User));
+export default connect(null, mapDispatchToProps)(withStyles(styles)(User));
