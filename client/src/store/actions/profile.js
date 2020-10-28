@@ -11,8 +11,6 @@ export const fetchProfileDetails = (handle) => {
         const data = await res.json();
         dispatch(fetchProfileDetailsSuccess(data));
         dispatch(actions.fetchTweetsSuccess(data.tweets));
-        // this.props.setTweets(data.tweets);
-        console.log(data);
       } else {
         const err = await res.clone().json();
         throw err;
@@ -62,9 +60,9 @@ export const uploadUserImage = (payload) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        console.log(data);
-        dispatch(fetchProfileDetails(payload.handle));
-        dispatch(actions.getUserData(payload.FBIdToken));
+        // dispatch(fetchProfileDetails(payload.handle));
+        // dispatch(actions.getUserData(payload.FBIdToken));
+        dispatch(uploadUserImageSuccess(data));
       } else {
         const err = await res.clone().json();
         throw err;
@@ -73,6 +71,13 @@ export const uploadUserImage = (payload) => {
     .catch((err) => {
       console.log(err)
     })
+  }
+}
+
+const uploadUserImageSuccess = (data) => {
+  return {
+    type: actionTypes.UPLOAD_USER_IMAGE_SUCCESS,
+    payload: data
   }
 }
 
@@ -91,9 +96,9 @@ export const uploadBackgroundImage = (payload) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        console.log(data);
-        dispatch(fetchProfileDetails(payload.handle));
+        // dispatch(fetchProfileDetails(payload.handle));
         dispatch(actions.getUserData(payload.FBIdToken));
+        dispatch(uploadBackgroundImageSuccess(data));
       } else {
         const err = await res.clone().json();
         throw err;
@@ -102,6 +107,13 @@ export const uploadBackgroundImage = (payload) => {
     .catch((err) => {
       console.log(err)
     })
+  }
+}
+
+const uploadBackgroundImageSuccess = (data) => {
+  return {
+    type: actionTypes.UPLOAD_BACKGROUND_IMAGE_SUCCESS,
+    payload: data
   }
 }
 
@@ -124,8 +136,6 @@ export const editProfileDetails = (payload) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        console.log(data);
-        // Update profile
         dispatch(editProfileDetailsSuccess(data.details));
       } else {
         const err = await res.clone().json();

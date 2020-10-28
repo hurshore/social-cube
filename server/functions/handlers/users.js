@@ -228,6 +228,7 @@ exports.uploadUserImage = (req, res) => {
 
   let imageFileName;
   let imageToBeUploaded = {};
+  let imageUrl;
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     if(mimetype !== 'image/png' && mimetype !== 'image/jpeg') {
@@ -251,14 +252,18 @@ exports.uploadUserImage = (req, res) => {
       }
     })
     .then(() => {
-      const imageUrl = `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${imageFileName}?alt=media`;
+      imageUrl = `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${imageFileName}?alt=media`;
       db.doc(`/users/${req.user.handle}`).update({
         imageUrl,
         imageFileName 
       });
     })
     .then(() => {
-      return res.json({ message: 'Image uploaded successfully' });
+      return res.json({
+        message: 'Image uploaded successfully',
+        imageUrl,
+        imageFileName
+      });
     })
     .catch(err => {
       console.error(err);
@@ -278,6 +283,7 @@ exports.uploadBackgroundImage = (req, res) => {
 
   let imageFileName;
   let imageToBeUploaded = {};
+  let backgroundUrl;
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     if(mimetype !== 'image/png' && mimetype !== 'image/jpeg') {
@@ -301,14 +307,18 @@ exports.uploadBackgroundImage = (req, res) => {
       }
     })
     .then(() => {
-      const backgroundUrl = `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${imageFileName}?alt=media`;
+      backgroundUrl = `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${imageFileName}?alt=media`;
       db.doc(`/users/${req.user.handle}`).update({
         backgroundUrl,
         backgroundImageFileName: imageFileName
       });
     })
     .then(() => {
-      return res.json({ message: 'Background image uploaded successfully' });
+      return res.json({
+        message: 'Background image uploaded successfully',
+        backgroundUrl,
+        backgroundImageFileName: imageFileName
+      });
     })
     .catch(err => {
       console.error(err);

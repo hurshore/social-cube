@@ -61,6 +61,15 @@ const styles = (theme) => ({
   },
   submitBtn: {
     marginTop: '.5rem'
+  },
+  imageSkeleton: {
+    height: '300px',
+    [theme.breakpoints.up('sm')]: {
+      height: '100%'
+    },
+    '& div': {
+      height: '100%'
+    }
   }
 })
 
@@ -121,20 +130,17 @@ const TweetDialog = (props) => {
       },
       body: JSON.stringify(body)
     })
-    .then((res) => {
+    .then(async (res) => {
       if(res.ok) {
         return res.json()
           .then((data => {
-            console.log(data);
             setComment('');
             setLoading(false);
             props.postComment(data);
           }));
       } else {
-        return res.clone().json()
-          .then((err) => {
-            throw err;
-          });
+        const err = await res.clone().json();
+        throw err;
       }
     })
     .catch((err) => {
@@ -154,9 +160,11 @@ const TweetDialog = (props) => {
             <Grid item sm={7} className={classes.tweetImageContainer}>
               {tweet.tweetImageUrl ?
                 <img src={tweet.tweetImageUrl} alt="post" className={classes.tweetImage} /> : (
-                  <SkeletonTheme color="grey">
-                    <Skeleton height={400} />
-                  </SkeletonTheme>
+                  <div className={classes.imageSkeleton}>
+                    <SkeletonTheme color="grey" height={'100%'}>
+                      <Skeleton height={'100%'} />
+                    </SkeletonTheme>
+                  </div>
                 )
               }
             </Grid>

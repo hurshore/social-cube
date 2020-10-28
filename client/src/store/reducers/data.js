@@ -71,7 +71,6 @@ const reducer = (state = initialState, action) => {
         tweet: {}
       }
     case actionTypes.POST_COMMENT:
-      console.log(action.payload);
       const newTweets = state.tweets.map((tweet) => tweet.tweetId !== action.payload.tweetId ? 
         tweet : { ...tweet, commentCount: tweet.commentCount + 1 }
       )
@@ -94,7 +93,6 @@ const reducer = (state = initialState, action) => {
         tweet
       }
     case actionTypes.POST_TWEET_SUCCESS:
-      console.log(action.payload);
       const freshTweets = [
         {...action.payload},
         ...state.tweets
@@ -133,6 +131,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false
+      }
+    case actionTypes.UPLOAD_USER_IMAGE_SUCCESS:
+      return {
+        ...state,
+        tweets: state.tweets.map((tweet) => {
+          return {
+            ...tweet,
+            userImageUrl: action.payload.imageUrl
+          }
+        })
       }
     default: return state;
   }

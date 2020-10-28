@@ -84,7 +84,6 @@ const AddTweet = (props) => {
   const handleClickOpen = () => {
     setIsOpen(true);
     initializeMedia();
-    console.log('Add button clicked');
   };
 
   const handleClose = () => {
@@ -97,28 +96,6 @@ const AddTweet = (props) => {
   }
 
   const submitHandler = async (event) => {
-    // event.preventDefault();
-    // const imageFile = picture;
-    // const options = {
-    //   maxSizeMB: 1,
-    //   maxWidthOrHeight: 1920,
-    //   useWebWorker: true
-    // }
-    // try {
-    //   const compressedFile = await imageCompression(imageFile, options);
-    //   console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-    //   console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
-    //   const newTweet = {
-    //     body: tweetBody,
-    //     picture: compressedFile
-    //   };
-    //   props.postTweet({ ...newTweet, FBIdToken: props.FBIdToken });
-    //   setIsOpen(false);
-    //   setTweetBody('');
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
     compressImage(picture)
       .then((compressedFile) => {
         const newTweet = {

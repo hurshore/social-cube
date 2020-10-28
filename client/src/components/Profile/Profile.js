@@ -151,7 +151,7 @@ const Profile = (props) => {
       <div className={classes.userImageWrapper}>
         <Avatar alt={fullName} src={imageUrl} className={classes.userImage} />
         {
-          handle === props.userHandle ? <EditProfile /> : null
+          handle && handle === props.userHandle ? <EditProfile /> : null
         }
       </div>
       <div className={classes.userDetails}>

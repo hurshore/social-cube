@@ -1,12 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import * as actions from '../../store/actions';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-//Utility
-import { compressImage } from '../../shared/utility';
 //Components
 import EditDetails from './EditDetails';
-import CustomSnackbar from '../UI/CustomSnackbar/CustomSnackbar';
+import EditPicture from './EditPicture';
 //MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,7 +12,6 @@ import Paper from '@material-ui/core/Paper';
 //Icons
 import EditIcon from '@material-ui/icons/Edit';
 import CustomButton from '../UI/CustomButton/CustomButton';
-import { Typography } from '@material-ui/core';
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -34,9 +31,6 @@ const styles = (theme) => ({
 
 const EditImage  = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const imageInput = useRef(null);
-  const backgroundInput = useRef(null);
   const { classes } = props;
 
   const handleOpen = () => {
@@ -47,87 +41,18 @@ const EditImage  = (props) => {
     setIsOpen(false);
   }
 
-  const snackbarOpenHandler = () => {
-    setSnackbarOpen(true);
-  }
-
-  const snackbarCloseHandler = () => {
-    setSnackbarOpen(false);
-  }
-
-  const profileImageHandler = () => {
-    imageInput.current.click();
-    setIsOpen(false);
-  }
-
-  const backgroundImageHandler = () => {
-    backgroundInput.current.click();
-    setIsOpen(false);
-  }
-
-  const handleProfileImageChange = () => {
-    if(imageInput.current.files.length > 0) {
-      snackbarOpenHandler();
-      const handle = props.match.params.handle;
-      compressImage(imageInput.current.files[0])
-      .then((compressedImage) => {
-        console.log('Uploading image...')
-        props.uploadImage({
-          image: compressedImage,
-          FBIdToken: props.FBIdToken,
-          handle
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    } 
-  }
-
-  const handleBackgroundImageChange = () => {
-    if(backgroundInput.current.files.length > 0) {
-      snackbarOpenHandler();
-      const handle = props.match.params.handle;
-      compressImage(backgroundInput.current.files[0])
-      .then((compressedImage) => {
-        console.log('Uploading image...')
-        props.uploadBackground({
-          image: compressedImage,
-          FBIdToken: props.FBIdToken,
-          handle
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    }
-  }
-
   return (
     <React.Fragment>
       {/* <CustomSnackbar open={snackbarOpen} clicked={snackbarCloseHandler} message="Uploading image..." /> */}
       <CustomButton btnClassName={classes.editImage} clicked={handleOpen} title="Edit profile">
         <EditIcon />
       </CustomButton>
-      <input
-        type="file"
-        ref={imageInput}
-        accept="image/*"
-        hidden="hidden"
-        onChange={handleProfileImageChange}
-      />
-      <input
-        type="file"
-        ref={backgroundInput}
-        accept="image/*"
-        hidden="hidden"
-        onChange={handleBackgroundImageChange}
-      />
       <Dialog onClose={handleClose} open={isOpen}>
         <Paper className={classes.dialogBody}>
-          <Typography variant="body1" component="p" className={classes.profilePicture} onClick={profileImageHandler}>Change profile picture</Typography>
-          <Typography variant="body1" component="p" className={classes.backgroundImage} onClick={backgroundImageHandler}>Change background image</Typography>
+          {/* <Typography variant="body1" component="p" className={classes.profilePicture} onClick={profileImageHandler}>Change profile picture</Typography>
+          <Typography variant="body1" component="p" className={classes.backgroundImage} onClick={backgroundImageHandler}>Change background image</Typography> */}
           <EditDetails />
+          <EditPicture />
         </Paper>
       </Dialog>
     </React.Fragment>

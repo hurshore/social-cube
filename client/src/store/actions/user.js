@@ -12,11 +12,9 @@ export const getUserData = (FBIdToken) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        console.log(data);
         dispatch(getUserDataSuccess(data)); 
       } else {
         const err = await res.clone().json();
-        console.log(err);
         throw err;
       }
     })
@@ -56,8 +54,7 @@ export const followUser = (payload) => {
     })
     .then(async (res) => {
       if(res.ok) {
-        const data = await res.json();
-        console.log(data);
+        // const data = await res.json();
         dispatch(followUserSuccess({
           followingHandle: payload.followingHandle,
           followHandle: payload.followHandle
@@ -91,8 +88,7 @@ export const  unfollowUser = (payload) => {
     })
     .then(async (res) => {
       if(res.ok) {
-        const data = await res.json();
-        console.log(data);
+        // const data = await res.json();
         dispatch(unfollowUserSuccess({
           unfollowingHandle: payload.unfollowingHandle,
           unfollowHandle: payload.unfollowHandle
@@ -117,7 +113,6 @@ export const unfollowUserSuccess = (payload) => {
 }
 
 export const markUnreadNotifications = (notificationIds, FBIdToken) => {
-  console.log(notificationIds);
   return dispatch => {
     fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/notifications', {
       method: 'POST',
@@ -130,13 +125,10 @@ export const markUnreadNotifications = (notificationIds, FBIdToken) => {
     })
     .then(async (res) => {
       if(res.ok) {
-        console.log('Got here');
-        const data = await res.json();
-        console.log(data);
+        // const data = await res.json();
         dispatch(notificationsMarkedRead()); 
       } else {
         const err = await res.clone().json();
-        console.log(err);
         throw err;
       }
     })
@@ -151,30 +143,3 @@ const notificationsMarkedRead = () => {
     type: actionTypes.NOTIFICATIONS_MARKED_READ
   }
 }
-
-// export const uploadUserImage = (image, FBIdToken) => {
-//   const formData = new FormData();
-//   formData.append('file', image);
-//   return dispatch => {
-//     fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/image', {
-//       method: 'POST',
-//       headers: {
-//         'Authorization': FBIdToken
-//       },
-//       body: formData
-//     })
-//     .then(async (res) => {
-//       if(res.ok) {
-//         const data = await res.json();
-//         console.log(data);
-//         dispatch(getUserData(FBIdToken));
-//       } else {
-//         const err = await res.clone().json();
-//         throw err;
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-//   }
-// }

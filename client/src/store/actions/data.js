@@ -9,7 +9,6 @@ export const fetchTweets = () => {
         return res.json();
       })
       .then((tweets) => {
-        console.log(tweets);
         dispatch(fetchTweetsSuccess(tweets));
       })
       .catch((err) => {
@@ -52,7 +51,6 @@ export const fetchTweet = (tweetId) => {
       .then(async (res) => {
         if(res.ok) {
           const data = await res.json();
-          console.log('The tweet', data);
           dispatch(fetchTweetSuccess(data));
         } else {
           const err = await res.clone().json();
@@ -126,7 +124,6 @@ export const likeTweet = (tweetId, FBIdToken) => {
       .then(async (res) => {
         if(res.ok) {
           const data = await res.json();
-          console.log(data);
           dispatch(likeTweetSuccess(data));
         } else {
           const err = await res.clone().json();
@@ -192,7 +189,6 @@ export const postComment = (data) => {
 }
 
 export const postTweet = (payload) => {
-  console.log(payload);
   return dispatch => {
     var tweetData = new FormData();
     tweetData.append('body', payload.body.trim());
@@ -208,7 +204,6 @@ export const postTweet = (payload) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        console.log('New tweet', data);
         dispatch(postTweetSuccess(data));
       } else {
         const err = await res.clone().json();
@@ -239,8 +234,7 @@ export const deleteTweet = (tweetId, FBIdToken) => {
     })
     .then(async (res) => {
       if(res.ok) {
-        const data = await res.json();
-        console.log(data);
+        // const data = await res.json();
         dispatch(deleteTweetSuccess(tweetId));
       } else {
         const err = await res.clone().json();
@@ -273,8 +267,7 @@ export const deleteComment = (payload) => {
     })
     .then(async (res) => {
       if(res.ok) {
-        const data = await res.json();
-        console.log(data);
+        // const data = await res.json();
         dispatch(deleteCommentSuccess({
           tweetId: payload.tweetId,
           commentId: payload.commentId

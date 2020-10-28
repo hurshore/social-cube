@@ -43,7 +43,6 @@ const notification = (props) => {
   }
   
   const notificationClickHandler = (event, tweetId, recipient, sender) => {
-    console.log(event.target.id);
     switch(event.target.id) {
       case 'like':
       case 'comment':

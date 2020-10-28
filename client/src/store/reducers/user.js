@@ -26,15 +26,6 @@ const reducer = (state = initialState, action) => {
         ...newState,
         loading: false
       }
-      // return {
-      //   ...state,
-      //   credentials: action.payload.credentials,
-      //   followers: action.payload.followers,
-      //   following: action.payload.following,
-      //   notifications: action.payload.notifications,
-      //   likes: action.payload.likes,
-      //   loading: false
-      // }
     case actionTypes.GET_USER_DATA_FAIL:
       return {
         ...state,
@@ -57,7 +48,6 @@ const reducer = (state = initialState, action) => {
         likes: state.likes.filter((like) => like.tweetId !== action.payload.tweetId)
       }
     case actionTypes.FOLLOW_USER_SUCCESS:
-      console.log(action.payload);
       const following = [
         ...state.following,
         action.payload.followHandle
@@ -67,7 +57,6 @@ const reducer = (state = initialState, action) => {
         following
       }
     case actionTypes.UNFOLLOW_USER_SUCCESS:
-      console.log(action.payload)
       const newFollowing = state.following.filter((user) => user !== action.payload.unfollowHandle)
       return {
         ...state,
@@ -80,6 +69,26 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         notifications
+      }
+    case actionTypes.UPLOAD_USER_IMAGE_SUCCESS:
+      const freshCredentials = {
+        ...state.credentials,
+        imageUrl: action.payload.imageUrl,
+        imageFileName: action.payload.imageFileName
+      }
+      return {
+        ...state,
+        credentials: freshCredentials
+      }
+    case actionTypes.UPLOAD_BACKGROUND_IMAGE_SUCCESS:
+      const credentials = {
+        ...state.credentials,
+        backgroundUrl: action.payload.backgroundUrl,
+        backgroundImageFileName: action.payload.backgroundImageFileName
+      }
+      return {
+        ...state,
+        credentials: credentials
       }
     default: return state;
   }

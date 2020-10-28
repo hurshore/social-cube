@@ -47,15 +47,12 @@ class User extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if(nextProps.match.params.handle !== prevState.handle) {
-      console.log('Not equal');
-
       return {
         handle: nextProps.match.params.handle
       }
     }
     if(nextProps.match.params.tweetId !== prevState.tweetIdParam) {
       const tweetId = nextProps.match.params.tweetId;
-      console.log(tweetId);
       return {
         tweetIdParam: tweetId
       }

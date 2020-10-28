@@ -13,7 +13,6 @@ export const dataURItoBlob = (dataURI) => {
 }
 
 export const compressImage = async (imageFile) => {
-  console.log('About to begin image compression');
   const options = {
     maxSizeMB: 1,
     maxWidthOrHeight: 1920,
@@ -21,8 +20,6 @@ export const compressImage = async (imageFile) => {
   }
   try {
     const compressedFile = await imageCompression(imageFile, options);
-    console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-    console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
     return compressedFile;
   } catch (error) {
     console.log(error);

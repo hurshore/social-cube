@@ -18,6 +18,12 @@ const styles = (theme) => ({
       top: '-12px',
       right: '-7px'
     }
+  },
+  notificationDrawer: {
+    minWidth: '250px',
+  },
+  empty: {
+    padding: '.4rem'
   }
 })
 
@@ -40,6 +46,7 @@ const Notifications = (props) => {
         open={props.open}
         onClose={props.toggleDrawer}
         onOpen={props.toggleDrawer}
+        className={classes.notificationDrawer}
       >
         {props.notifications.length > 0 ?
           props.notifications.map((notification) => (
@@ -53,7 +60,7 @@ const Notifications = (props) => {
               read={notification.read}
             />
           )
-          ) : <Typography variant="p">Nothing to see here<span role="img" aria-label="eyes">👀</span></Typography>
+          ) : <Typography variant="p" className={classes.empty}>Nothing to see here<span role="img" aria-label="eyes">👀</span></Typography>
         }
       </SwipeableDrawer>
     </React.Fragment>

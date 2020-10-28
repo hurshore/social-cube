@@ -67,6 +67,26 @@ const reducer = (state = initialState, action) => {
         credentials: freshCredentials,
         followers: newFollowers
       }
+    case actionTypes.UPLOAD_USER_IMAGE_SUCCESS:
+      const newerCredentials = {
+        ...state.credentials,
+        imageUrl: action.payload.imageUrl,
+        imageFileName: action.payload.imageFileName
+      }
+      return {
+        ...state,
+        credentials: newerCredentials
+      }
+    case actionTypes.UPLOAD_BACKGROUND_IMAGE_SUCCESS:
+      const fresherCredentials = {
+        ...state.credentials,
+        backgroundUrl: action.payload.backgroundUrl,
+        backgroundImageFileName: action.payload.backgroundImageFileName
+      }
+      return {
+        ...state,
+        credentials: fresherCredentials
+      }
     default: return state
   }
 }

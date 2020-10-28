@@ -46,7 +46,6 @@ export const auth = (payload) => {
       }
     })
     .catch((err) => {
-      console.log(payload);
       console.log(err);
       dispatch(authFail(err));
     })
