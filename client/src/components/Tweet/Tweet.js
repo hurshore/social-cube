@@ -73,7 +73,12 @@ const Tweet = (props) => {
   dayjs.extend(relativeTime);
 
   const likeTweet = (tweetId) => {
-    props.likeTweet(tweetId, props.FBIdToken);
+    if(props.authenticated) {
+      props.likeTweet(tweetId, props.FBIdToken);
+    } else {
+      props.setAuthRedirectPath(`/users/${props.userHandle}/tweet/${tweetId}`);
+      props.history.push('/login');
+    }
   }
 
   const unlikeTweet = (tweetId) => {
@@ -125,7 +130,7 @@ const Tweet = (props) => {
   }
 
   const redirectToUser = () => {
-    props.history.push(`/users/${props.userHandle}`)
+    props.history.push(`/users/${props.userHandle}`);
   }
 
   return (
@@ -206,7 +211,8 @@ const mapStateToProps = (state) => {
   return {
     likes: state.user.likes,
     FBIdToken: state.auth.FBIdToken,
-    credentials: state.user.credentials
+    credentials: state.user.credentials,
+    authenticated: state.auth.authenticated
   }
 }
 
@@ -214,7 +220,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     likeTweet: (tweetId, FBIdToken) => dispatch(actions.likeTweet(tweetId, FBIdToken)),
     unlikeTweet: (tweetId, FBIdToken) => dispatch(actions.unlikeTweet(tweetId, FBIdToken)),
-    deleteTweet: (tweetId, FBIdToken) => dispatch(actions.deleteTweet(tweetId, FBIdToken))
+    deleteTweet: (tweetId, FBIdToken) => dispatch(actions.deleteTweet(tweetId, FBIdToken)),
+    setAuthRedirectPath: (path) => (dispatch(actions.setAuthRedirectPath(path)))
   }
 }
 

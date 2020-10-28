@@ -3,7 +3,8 @@ import * as actions from './index';
 
 export const fetchProfileDetails = (handle) => {
   return dispatch => {
-    dispatch(fetchProfileDetailsStart);
+    dispatch(actions.clearTweets());
+    dispatch(fetchProfileDetailsStart());
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${handle}`)
     .then(async (res) => {
       if(res.ok) {
@@ -19,7 +20,9 @@ export const fetchProfileDetails = (handle) => {
     })
     .catch((err) => {
       console.log(err);
-      dispatch(fetchProfileDetailsFail);
+      dispatch(fetchProfileDetailsFail({
+        user: err.error
+      }));
     })
   }
 }
@@ -37,9 +40,10 @@ const fetchProfileDetailsSuccess = (data) => {
   }
 }
 
-const fetchProfileDetailsFail = () => {
+const fetchProfileDetailsFail = (errors) => {
   return {
-    type: actionTypes.FETCH_PROFILE_DETAILS_FAIL
+    type: actionTypes.FETCH_PROFILE_DETAILS_FAIL,
+    errors
   }
 }
 
@@ -50,7 +54,8 @@ export const uploadUserImage = (payload) => {
     fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/image', {
       method: 'POST',
       headers: {
-        'Authorization': payload.FBIdToken
+        'Authorization': payload.FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       },
       body: formData
     })
@@ -111,7 +116,8 @@ export const editProfileDetails = (payload) => {
       method: 'POST',
       headers: {
         'Authorization': payload.FBIdToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(body)
     })

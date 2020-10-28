@@ -60,6 +60,11 @@ const reducer = (state = initialState, action) => {
         tweets,
         popularTweets
       }
+    case actionTypes.CLEAR_TWEETS:
+      return {
+        ...state,
+        tweets: []
+      }
     case actionTypes.CLEAR_TWEET:
       return {
         ...state,
@@ -117,6 +122,17 @@ const reducer = (state = initialState, action) => {
         ...state,
         tweets: newerTweets,
         tweet: newTweet
+      }
+    case actionTypes.FETCH_PROFILE_DETAILS_START: 
+      return {
+        ...state,
+        loading: true
+      }
+    case actionTypes.FETCH_PROFILE_DETAILS_SUCCESS:
+    case actionTypes.FETCH_PROFILE_DETAILS_FAIL: 
+      return {
+        ...state,
+        loading: false
       }
     default: return state;
   }

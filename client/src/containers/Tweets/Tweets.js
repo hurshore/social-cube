@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as actions from '../../store/actions';
 
 //Redux stuff
 import { connect } from 'react-redux';
@@ -14,10 +13,6 @@ const styles = (theme) => ({
 })
 
 class Tweets extends Component {
-  componentDidMount() {
-    this.props.onFetchTweets();
-  }
-
   render() {
     return (
       <React.Fragment>
@@ -71,24 +66,14 @@ class Tweets extends Component {
           })
         }
       </React.Fragment>
-      // <React.Fragment>
-      //   <TweetSkeleton />
-      // </React.Fragment>
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    tweets: state.data.tweets,
     loading: state.data.loading
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onFetchTweets: () => dispatch(actions.fetchTweets())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Tweets));
+export default connect(mapStateToProps)(withStyles(styles)(Tweets));

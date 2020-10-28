@@ -3,12 +3,17 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import MainContent from '../../components/MainContent/MainContent';
 import SideContent from '../../components/SideContent/SideContent';
+import * as actions from '../../store/actions';
 
 class Home extends Component {
+  componentDidMount() {
+    this.props.onFetchTweets();
+  }
+
   render() {
     let homeMarkup = (
       <React.Fragment>
-        <MainContent />
+        <MainContent tweets={this.props.tweets} />
         <SideContent />
       </React.Fragment>
     )
@@ -27,8 +32,15 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    authenticated: state.auth.authenticated
+    authenticated: state.auth.authenticated,
+    tweets: state.data.tweets
   }
 }
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchTweets: () => dispatch(actions.fetchTweets())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

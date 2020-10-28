@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 
 //Components
-import PopularPost from '../../components/PopularTweet/PopularTweet';
+import PopularTweet from '../../components/PopularTweet/PopularTweet';
+import PopularTweetSkeleton from '../../components/PopularTweet/PopularTweetSkeleton';
 //MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
@@ -34,7 +35,7 @@ class popularTweets extends Component {
         {
           !this.props.loading ? (
             this.props.popularTweets.map((tweet) => (
-              <PopularPost key={tweet.tweetId}
+              <PopularTweet key={tweet.tweetId}
                 tweetId={tweet.tweetId}
                 likeCount={tweet.likeCount}
                 commentCount={tweet.commentCount}
@@ -43,7 +44,11 @@ class popularTweets extends Component {
                 createdAt={tweet.createdAt}
               />
             ))
-          ) : <p>Loading</p>
+          ) : (
+            Array(3).fill().map((item, index) => (
+              <PopularTweetSkeleton key={index} />
+            ))
+          )
         }
       </div>
     )

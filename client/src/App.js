@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ThemeContext } from './context/themeContext';
 import axios from 'axios';
@@ -16,6 +16,7 @@ import Home from './containers/Home/Home';
 import Login from './containers/Login/Login';
 import Signup from './containers/Signup/Signup';
 import User from './containers/User/User';
+import UnknownRoute from './components/404/404';
 //Components
 import Logout from './components/Logout/Logout';
 //MUI
@@ -89,7 +90,7 @@ function App(props) {
   const { onTryAutoLogin, authenticated, getAuthenticatedUserData, FBIdToken } = props;
 
   useEffect(() => {
-    onTryAutoLogin()
+    onTryAutoLogin(props.authRedirectPath, props.history)
   }, [onTryAutoLogin]);
 
   useEffect(() => {
@@ -99,7 +100,7 @@ function App(props) {
     } else if (theme === 'light') {
       themeContext.setPreferredTheme('light');
     }
-  }, [])
+  }, [themeContext])
 
   useEffect(() => {
     if(authenticated && FBIdToken) {
@@ -124,6 +125,8 @@ function App(props) {
       <AuthRoute path="/login" exact component={Login} />
       <AuthRoute path="/signup" exact component={Signup} />
       <Route path="/users/:handle" exact component={User} />
+      <Route path="/users/:handle/tweet/:tweetId" exact component={User} />
+      <Route component={UnknownRoute} />
     </Switch>
   )
 
@@ -136,6 +139,7 @@ function App(props) {
         <Route path="/logout" exact component={Logout} />
         <Route path="/users/:handle" exact component={User} />
         <Route path="/users/:handle/tweet/:tweetId" exact component={User} />
+        <Route component={UnknownRoute} />
       </Switch>
     )
   }
@@ -161,15 +165,16 @@ function App(props) {
 const mapStateToProps = (state) => {
   return {
     authenticated: state.auth.authenticated,
-    FBIdToken: state.auth.FBIdToken
+    FBIdToken: state.auth.FBIdToken,
+    authRedirectPath: state.auth.authRedirectPath
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onTryAutoLogin: () => dispatch(actions.checkAuthState()),
+    onTryAutoLogin: (path, history) => dispatch(actions.checkAuthState(path, history)),
     getAuthenticatedUserData: (token) => dispatch(actions.getUserData(token))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));

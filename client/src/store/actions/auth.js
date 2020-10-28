@@ -40,7 +40,8 @@ export const auth = (payload) => {
         .then((data) => {
           dispatch(authSuccess(`Bearer ${data.token}`));
           localStorage.setItem('FBIdToken', `Bearer ${data.token}`);
-          payload.history.push('/');
+          payload.history.push(payload.redirectPath);
+          dispatch(setAuthRedirectPath('/'));
         });
       }
     })
@@ -78,7 +79,7 @@ export const clearErrors = () => {
   }
 }
 
-export const checkAuthState = () => {
+export const checkAuthState = (redirectPath, history) => {
   return dispatch => {
     const idToken = localStorage.getItem('FBIdToken');
     if(!idToken) {
@@ -90,10 +91,16 @@ export const checkAuthState = () => {
         window.location.href = '/login';
       } else {
         dispatch(authSuccess(idToken));
-        // store.dispatch(getUserData());
       }
       
     }
+  }
+}
+
+export const setAuthRedirectPath = (path) => {
+  return {
+    type: actionTypes.SET_AUTH_REDIRECT_PATH,
+    path
   }
 }
 

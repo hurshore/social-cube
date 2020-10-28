@@ -36,7 +36,7 @@ const MainContent = (props) => {
   return (
     <div className={attachedClasses.join(' ')}>
       <AddTweet />
-      <Tweets />
+      <Tweets tweets={props.tweets} />
     </div>
   )
 }

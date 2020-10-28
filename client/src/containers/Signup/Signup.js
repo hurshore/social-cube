@@ -53,7 +53,8 @@ class Signup extends Component {
       email: this.state.email,
       password: this.state.password,
       confirmPassword: this.state.confirmPassword,
-      history: this.props.history
+      history: this.props.history,
+      redirectPath: this.props.authRedirectPath
     })
   }
 
@@ -133,7 +134,8 @@ class Signup extends Component {
 const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
-    errors: state.auth.errors
+    errors: state.auth.errors,
+    authRedirectPath: state.auth.authRedirectPath
   }
 }
 

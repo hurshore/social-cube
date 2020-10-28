@@ -1,4 +1,5 @@
 import React from 'react';
+import Skeleton from 'react-loading-skeleton';
 import Comment from './Comment/Comment';
 //MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -26,7 +27,7 @@ const comments = (props) => {
     <div className={classes.comments}>
       <div>
         <Typography variant="body1" className={classes.tweetBody}>
-          {props.tweetBody}
+          {props.tweetBody || <Skeleton width={200} />}
         </Typography>
         <Divider />
       </div>

@@ -72,11 +72,17 @@ class User extends Component {
           uploadBackground={this.uploadBackgroundImage}
         />
         <div className={classes.tweetsContainer}>
-          <Tweets tweetIdParam={this.state.tweetIdParam} />
+          <Tweets tweets={this.props.tweets} tweetIdParam={this.state.tweetIdParam} />
         </div>
       </React.Fragment>
     )
   };
+}
+
+const mapStateToProps = (state) => {
+  return {
+    tweets: state.data.tweets
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -85,4 +91,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(User));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(User));

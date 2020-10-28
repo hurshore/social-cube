@@ -5,6 +5,7 @@ export {
   fetchPopularTweets,
   likeTweet,
   unlikeTweet,
+  clearTweets,
   clearTweet,
   postComment,
   postTweet,
@@ -17,6 +18,7 @@ export {
   clearErrors,
   logout,
   checkAuthState,
+  setAuthRedirectPath
 } from './auth'
 
 export {

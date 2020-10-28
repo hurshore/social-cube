@@ -1,7 +1,7 @@
 import React from 'react';
 
 //Routing Stuff
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 //MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -24,6 +24,9 @@ const styles = (theme) => ({
     display: 'flex',
     color: '#646885',
     cursor:  'pointer',
+    '&.active .icon': {
+      backgroundColor: theme.spreadThis.customTheme.hoverColor
+    },
     '& .icon': {
       position: 'relative',
       display: 'block',
@@ -35,7 +38,6 @@ const styles = (theme) => ({
       cursor: 'pointer'
     },
     '&:hover .icon': {
-      // backgroundColor: 'rgb(250, 250, 251)'
       backgroundColor: theme.spreadThis.customTheme.hoverColor
     }
   }
@@ -47,12 +49,12 @@ const navigationItem = (props) => {
   return (
     <li className={classes.listItem}>
       {props.to ? (
-        <Link to={props.to} className={classes.navLink}>
+        <NavLink exact to={props.to} className={classes.navLink}>
           <span className={`${props.className} icon`}>
             {props.children}
           </span>
           <span className={classes.title}>{props.textContent}</span>
-        </Link>
+        </NavLink>
       ): (
         <div className={classes.navLink} onClick={props.clicked}>
            <span className={`${props.className} icon`}>

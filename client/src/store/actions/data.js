@@ -38,6 +38,12 @@ const fetchTweetsFail = () => {
   }
 }
 
+export const clearTweets = () => {
+  return {
+    type: actionTypes.CLEAR_TWEETS
+  }
+}
+
 //Fetch single tweet
 export const fetchTweet = (tweetId) => {
   return dispatch => {
@@ -71,12 +77,6 @@ const fetchTweetSuccess = (data) => {
     payload: data
   }
 }
-
-// const fetchTweetFail = () => {
-//   return {
-//     type: actionTypes.FETCH_TWEET_FAIL
-//   }
-// }
 
 //Fetch Popular Tweets
 export const fetchPopularTweets = () => {
@@ -119,7 +119,8 @@ export const likeTweet = (tweetId, FBIdToken) => {
   return dispatch => {
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${tweetId}/like`, {
       headers: {
-        'Authorization': FBIdToken
+        'Authorization': FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
       .then(async (res) => {
@@ -150,7 +151,8 @@ export const unlikeTweet = (tweetId, FBIdToken) => {
   return dispatch => {
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${tweetId}/unlike`, {
       headers: {
-        'Authorization': FBIdToken
+        'Authorization': FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
       .then(async (res) => {
@@ -198,7 +200,8 @@ export const postTweet = (payload) => {
     fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet', {
       method: 'POST',
       headers: {
-        'Authorization': payload.FBIdToken
+        'Authorization': payload.FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       },
       body: tweetData
     })
@@ -218,12 +221,6 @@ export const postTweet = (payload) => {
   }
 }
 
-// const postTweetStart = () => {
-//   return {
-//     type: actionTypes.POST_TWEET_START
-//   }
-// }
-
 const postTweetSuccess = (data) => {
   return {
     type: actionTypes.POST_TWEET_SUCCESS,
@@ -231,18 +228,13 @@ const postTweetSuccess = (data) => {
   }
 }
 
-// const postTweetFail = () => {
-//   return {
-//     type: actionTypes.POST_TWEET_FAIL
-//   }
-// }
-
 export const deleteTweet = (tweetId, FBIdToken) => {
   return dispatch => {
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${tweetId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': FBIdToken
+        'Authorization': FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
     .then(async (res) => {
@@ -275,7 +267,8 @@ export const deleteComment = (payload) => {
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${payload.tweetId}/comment/${payload.commentId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': payload.FBIdToken
+        'Authorization': payload.FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
     .then(async (res) => {

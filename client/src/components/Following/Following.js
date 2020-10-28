@@ -18,6 +18,9 @@ const styles = (theme) => ({
   },
   empty: {
     padding: '.5rem'
+  },
+  followingButton: {
+    display: 'inline-block'
   }
 })
 
@@ -35,11 +38,15 @@ const Following = (props) => {
   
   return (
     <React.Fragment>
-      {
-        props.followingCount > -1 ? (
-          <Button onClick={openHandler}>{`${props.followingCount} following`}</Button>
-        ) : <Skeleton width={100} height={20} />
-      }
+      <div className={classes.followingButton}>
+        {
+          props.followingCount > -1 ? (
+            <Button onClick={openHandler}>{`${props.followingCount} following`}</Button>
+          ) : (
+            <Skeleton width={100} height={20} />
+          )
+        }
+      </div>
       <Dialog open={isOpen} onClose={closeHandler}>
         <Paper className={classes.followingWrapper}>
           <List>

@@ -45,7 +45,9 @@ const Followers = (props) => {
             <Button onClick={openHandler}>
               {props.followerCount !== 1 ? `${props.followerCount} followers` : `${props.followerCount} follower`}
             </Button>
-          ) : <Skeleton width={100} height={20} />
+          ) : (
+            <Skeleton width={100} height={20} />
+          )
         }
       </div>
       <Dialog open={isOpen} onClose={closeHandler}>

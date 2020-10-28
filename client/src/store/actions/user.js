@@ -5,7 +5,8 @@ export const getUserData = (FBIdToken) => {
     dispatch(getUserDataStart());
     fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/user', {
       headers: {
-        'Authorization': FBIdToken
+        'Authorization': FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
     .then(async (res) => {
@@ -49,7 +50,8 @@ export const followUser = (payload) => {
   return dispatch => {
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${payload.followHandle}/follow`, {
       headers: {
-        'Authorization': payload.FBIdToken
+        'Authorization': payload.FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
     .then(async (res) => {
@@ -83,7 +85,8 @@ export const  unfollowUser = (payload) => {
   return dispatch => {
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${payload.unfollowHandle}/unfollow`, {
       headers: {
-        'Authorization': payload.FBIdToken
+        'Authorization': payload.FBIdToken,
+        'Access-Control-Allow-Origin': '*'
       }
     })
     .then(async (res) => {
@@ -120,7 +123,8 @@ export const markUnreadNotifications = (notificationIds, FBIdToken) => {
       method: 'POST',
       headers: {
         'Authorization': FBIdToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(notificationIds)
     })

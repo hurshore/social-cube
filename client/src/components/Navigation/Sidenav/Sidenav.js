@@ -1,11 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Skeleton from 'react-loading-skeleton';
 //Components
 import NavigationItems from '../NavigationItems/NavigationItems';
-//Images
-import backgroundImg from '../../../assets/images/background-img.jpg';
-import profileImg from '../../../assets/images/profile-img.jpg';
 //MUI
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -55,6 +53,11 @@ const styles = (theme) => ({
       height: '100%',
       objectFit: 'cover'
     }
+  },
+  alternateBackground: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'grey'
   },
   profileDetails: {
     display: 'flex',
@@ -106,18 +109,26 @@ const sidenav = (props) => {
         <div className={attachedClasses.join(' ')} onClick={props.handleClose}>
           <div className={classes.profile}>
             <div className={classes.bgImage}>
-              <img src={ backgroundUrl } alt="background" />
+              {
+                backgroundUrl ? <img src={ backgroundUrl } alt="background" /> : <div className={classes.alternateBackground}></div>
+              }
             </div>
             <div className={classes.profileDetails}>
               <div className={classes.profileImage}>
-                <img src={imageUrl} alt="profile" />
+                {
+                  imageUrl ? <img src={imageUrl} alt="profile" /> : <Skeleton circle={true} width={60} height={60} />
+                }
               </div>
               <div className={classes.profileCredentials}>
                 <div className="name">
-                  <Typography variant="h5">{fullName}</Typography>
+                  <Typography variant="h5">
+                    {fullName || <Skeleton width={120} height={20} />}
+                  </Typography>
                 </div>
                 <div>
-                  <Typography variant="body2">{handle}</Typography>
+                  <Typography variant="body2">
+                    {handle || <Skeleton width={50} height={20} />}
+                  </Typography>
                 </div>
               </div>
             </div>

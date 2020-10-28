@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import * as actions from '../../store/actions';
 //Components
 import Comments from '../Comments/Comments';
@@ -104,6 +106,11 @@ const TweetDialog = (props) => {
 
   const submitHandler = (event, tweetId) => {
     event.preventDefault();
+    if(!props.authenticated) {
+      props.setAuthRedirectPath(`/users/${props.tweet.userHandle}/tweet/${tweetId}`);
+      props.history.push('/login');
+      return;
+    }
     const body = { body: comment }
     setLoading(true)
     fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${tweetId}/comment`, {
@@ -145,7 +152,13 @@ const TweetDialog = (props) => {
         <DialogContent className={classes.dialogContent}>
           <Grid container className={classes.tweetContainer}>
             <Grid item sm={7} className={classes.tweetImageContainer}>
-              <img src={tweet.tweetImageUrl} alt="post" className={classes.tweetImage} />
+              {tweet.tweetImageUrl ?
+                <img src={tweet.tweetImageUrl} alt="post" className={classes.tweetImage} /> : (
+                  <SkeletonTheme color="grey">
+                    <Skeleton height={400} />
+                  </SkeletonTheme>
+                )
+              }
             </Grid>
             <Grid item sm={5} className={classes.tweetContent}>
               <div className={classes.tweetContentWrapper}>
@@ -184,7 +197,8 @@ const TweetDialog = (props) => {
 const mapStateToProps = (state) => {
   return {
     tweet: state.data.tweet,
-    FBIdToken: state.auth.FBIdToken
+    FBIdToken: state.auth.FBIdToken,
+    authenticated: state.auth.authenticated
   }
 }
 
@@ -192,8 +206,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchTweet: (tweetId) => dispatch(actions.fetchTweet(tweetId)),
     clearTweet: () => dispatch(actions.clearTweet()),
-    postComment: (data) => dispatch(actions.postComment(data))
+    postComment: (data) => dispatch(actions.postComment(data)),
+    setAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(TweetDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(TweetDialog)));

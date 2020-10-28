@@ -58,7 +58,8 @@ class Login extends Component {
     this.props.onAuthLogin({
       email: this.state.email,
       password: this.state.password,
-      history: this.props.history
+      history: this.props.history,
+      redirectPath: this.props.authRedirectPath
     });
   }
 
@@ -109,7 +110,8 @@ class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     loading: state.auth.loading,
-    errors: state.auth.errors
+    errors: state.auth.errors,
+    authRedirectPath: state.auth.authRedirectPath
   }
 }
 

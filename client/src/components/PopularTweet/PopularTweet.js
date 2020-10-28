@@ -58,9 +58,7 @@ const popularTweet = (props) => {
       <CardHeader
         className={classes.cardHeader}
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            <img src={props.userImageUrl} alt="user" />
-          </Avatar>
+          <Avatar src={props.userImageUrl} alt="user" className={classes.avatar} />
         }
         title={props.userHandle}
         subheader={dayjs(props.createdAt).fromNow()}

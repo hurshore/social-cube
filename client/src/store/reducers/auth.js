@@ -4,7 +4,8 @@ const initialState = {
   authenticated: false,
   FBIdToken: null,
   loading: false,
-  errors: {}
+  errors: {},
+  authRedirectPath: '/'
 }
 
 const reducer = (state = initialState, action) => {
@@ -40,6 +41,12 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.LOGOUT: {
       return initialState;
+    }
+    case actionTypes.SET_AUTH_REDIRECT_PATH: {
+      return {
+        ...state,
+        authRedirectPath: action.path
+      }
     }
     default: return state;
   }

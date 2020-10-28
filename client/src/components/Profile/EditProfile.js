@@ -106,7 +106,7 @@ const EditImage  = (props) => {
   return (
     <React.Fragment>
       {/* <CustomSnackbar open={snackbarOpen} clicked={snackbarCloseHandler} message="Uploading image..." /> */}
-      <CustomButton btnClassName={classes.editImage} clicked={handleOpen} title="Edit profile picture">
+      <CustomButton btnClassName={classes.editImage} clicked={handleOpen} title="Edit profile">
         <EditIcon />
       </CustomButton>
       <input

@@ -4,7 +4,8 @@ const initialState = {
   credentials: {},
   followers: [],
   following: [],
-  loading: false
+  loading: false,
+  errors: {}
 }
 
 const reducer = (state = initialState, action) => {
@@ -25,7 +26,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_PROFILE_DETAILS_FAIL:
       return {
         ...state,
-        loading: false
+        loading: false,
+        errors: action.errors
       }
     case actionTypes.EDIT_PROFILE_DETAILS_SUCCESS:
       const credentials = {

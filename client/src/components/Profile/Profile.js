@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import * as actions from '../../store/actions';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { ThemeContext } from '../../context/themeContext';
 //Components
 import Followers from '../Followers/Followers';
 import Following from '../Following/Following';
@@ -11,7 +13,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import MUILink from '@material-ui/core/Link';
 //Icons
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
@@ -34,6 +36,11 @@ const styles = (theme) => ({
       height: '100%',
       objectFit: 'cover'
     }
+  },
+  alternateBackground: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'grey'
   },
   userImageWrapper: {
     margin: 'auto',
@@ -98,12 +105,22 @@ const styles = (theme) => ({
 })
 
 const Profile = (props) => {
-  const { classes, profile: { backgroundUrl, imageUrl, fullName, handle } } = props;
+  const { classes, profile: { backgroundUrl, imageUrl, fullName, handle }, authenticated } = props;
   const following = props.authUserFollowing.find((user) => {
     return user === handle;
   })
+  const themeContext = useContext(ThemeContext);
+  let skeletonColor = '#edebed';
+  let skeletonHightlightColor = '#fff';
+  if(themeContext.theme === 'light') {
+    skeletonColor = '#202020';
+    skeletonHightlightColor = '#444';
+  }
 
   const followUser = () => {
+    if(!authenticated) {
+      props.history.push('/login');
+    }
     const data = {
       followHandle: handle,
       followingHandle: props.userHandle,
@@ -124,7 +141,12 @@ const Profile = (props) => {
   return (
     <div className={classes.user}>
       <div className={classes.backgroundImg}>
-        <img src={backgroundUrl} alt="background" />
+        {
+          backgroundUrl ? 
+          <img src={backgroundUrl} alt="background" /> : 
+          <div className={classes.alternateBackground}>
+          </div>
+        }
       </div>
       <div className={classes.userImageWrapper}>
         <Avatar alt={fullName} src={imageUrl} className={classes.userImage} />
@@ -134,7 +156,11 @@ const Profile = (props) => {
       </div>
       <div className={classes.userDetails}>
         <Typography component="h1" className={classes.fullName}>
-            {fullName || <Skeleton width={120} />}
+            {fullName || (
+              <SkeletonTheme color={skeletonColor} highlightColor={skeletonHightlightColor}>
+                <Skeleton width={120} />
+              </SkeletonTheme>
+            )}
         </Typography>
         <SkeletonTheme color={'rgb(101, 119, 134)'}>
           {
@@ -158,10 +184,10 @@ const Profile = (props) => {
             ) : null
           }
           {props.profile.website ? 
-            <Link href={props.profile.website} className={classes.website} color="primary">
+            <MUILink href={props.profile.website} className={classes.website} color="primary">
               <LinkIcon />
               {props.profile.website}
-            </Link> : null  
+            </MUILink> : null  
           }
         </div>
         <div>
@@ -169,12 +195,23 @@ const Profile = (props) => {
           <Following followingCount={props.profile.followingCount} following={props.following} />
         </div>
         {
-          handle === props.userHandle ? null :
+          Object.keys(props.profile).length > 0 ? (
+            handle === props.userHandle ? null :
             following ? (
               <Button color="secondary" variant="contained" onClick={unfollowUser}>Unfollow</Button>
             ) : (
               <Button color="primary"  variant="contained" onClick={followUser}>Follow</Button>
             )
+          ) : null
+        }
+        {
+          props.errors.user ? (
+            <div>
+              <h3>
+                User not found. Go <Link to="/">Home</Link>
+              </h3>
+            </div>
+          ) : null
         }
       </div>
     </div>
@@ -188,7 +225,9 @@ const mapStateToProps = (state) => {
     profile: state.profile.credentials,
     followers: state.profile.followers,
     following: state.profile.following,
-    FBIdToken: state.auth.FBIdToken
+    FBIdToken: state.auth.FBIdToken,
+    authenticated: state.auth.authenticated,
+    errors: state.profile.errors
   }
 }
 
@@ -199,4 +238,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(Profile)));
