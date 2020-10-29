@@ -161,7 +161,7 @@ const Tweet = (props) => {
           <MenuItem onClick={deleteDialogOpenHandler}>Delete tweet</MenuItem> : null
         }
         <form className={classes.clipboard}>
-          <textarea ref={textAreaRef} value={`${document.location.host}/users/${props.userHandle}/tweet/${props.tweetId}`} onChange={function(){}} />
+          <textarea ref={textAreaRef} value={`${document.location.origin}/users/${props.userHandle}/tweet/${props.tweetId}`} onChange={function(){}} />
         </form>
       </Menu>
       <CardMedia
