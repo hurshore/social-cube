@@ -7,9 +7,17 @@ import { compressImage } from '../../shared/utility';
 import CustomSnackbar from '../UI/CustomSnackbar/CustomSnackbar';
 //MUI stuff
 import Typography from '@material-ui/core/Typography';
+import withStyles from '@material-ui/core/styles/withStyles';
 
+const styles = (theme) => ({
+  ...theme.spreadThis,
+  anchorEl: {
+    cursor: 'pointer'
+  }
+})
 
 const EditPicture = (props) => {
+  const { classes } = props;
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const imageInput = useRef(null);
   const backgroundInput = useRef(null);
@@ -72,8 +80,8 @@ const EditPicture = (props) => {
 
   return (
     <div>
-      <Typography variant="body1" component="p" onClick={profileImageHandler}>Change profile picture</Typography>
-      <Typography variant="body1" component="p" onClick={backgroundImageHandler}>Change background image</Typography>
+      <Typography variant="body1" component="p" onClick={profileImageHandler} className={classes.anchorEl}>Change profile picture</Typography>
+      <Typography variant="body1" component="p" onClick={backgroundImageHandler} className={classes.anchorEl}>Change background image</Typography>
       <CustomSnackbar open={snackbarOpen} clicked={snackbarCloseHandler} message="Uploading image..." />
       <input
         type="file"
@@ -107,4 +115,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPicture);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EditPicture));

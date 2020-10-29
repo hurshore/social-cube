@@ -44,7 +44,7 @@ exports.signup = (req, res) => {
         followingCount: 0,
         followerCount: 0,
         imageUrl: `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${noImg}?alt=media`,
-        backgoundUrl: `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${backgroundImg}?alt=media`
+        // backgoundUrl: `https://firebaseStorage.googleapis.com/v0/b/${config.storageBucket}/o/images%2F${backgroundImg}?alt=media`
       }
       return db.collection('users').doc(`${newUser.handle}`).set(userCredentials);
     })

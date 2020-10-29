@@ -5,7 +5,9 @@ export const fetchProfileDetails = (handle) => {
   return dispatch => {
     dispatch(actions.clearTweets());
     dispatch(fetchProfileDetailsStart());
-    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${handle}`)
+    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/user/${handle}`, {
+      'Access-Control-Allow-Origin': '*'
+    })
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
@@ -97,7 +99,7 @@ export const uploadBackgroundImage = (payload) => {
       if(res.ok) {
         const data = await res.json();
         // dispatch(fetchProfileDetails(payload.handle));
-        dispatch(actions.getUserData(payload.FBIdToken));
+        // dispatch(actions.getUserData(payload.FBIdToken));
         dispatch(uploadBackgroundImageSuccess(data));
       } else {
         const err = await res.clone().json();

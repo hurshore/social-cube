@@ -43,14 +43,11 @@ const EditImage  = (props) => {
 
   return (
     <React.Fragment>
-      {/* <CustomSnackbar open={snackbarOpen} clicked={snackbarCloseHandler} message="Uploading image..." /> */}
       <CustomButton btnClassName={classes.editImage} clicked={handleOpen} title="Edit profile">
         <EditIcon />
       </CustomButton>
       <Dialog onClose={handleClose} open={isOpen}>
         <Paper className={classes.dialogBody}>
-          {/* <Typography variant="body1" component="p" className={classes.profilePicture} onClick={profileImageHandler}>Change profile picture</Typography>
-          <Typography variant="body1" component="p" className={classes.backgroundImage} onClick={backgroundImageHandler}>Change background image</Typography> */}
           <EditDetails />
           <EditPicture />
         </Paper>

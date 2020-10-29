@@ -20,6 +20,9 @@ const styles = (theme) => ({
     padding: '1rem',
     textAlign: 'center'
   },
+  anchorEl: {
+    cursor: 'pointer'
+  },
   title: {
     padding: 0
   },
@@ -45,9 +48,9 @@ const EditDetails = (props) => {
     setState({
       ...state,
       isOpen: true,
-      bio: props.credentials.bio,
-      location: props.credentials.location,
-      website: props.credentials.website
+      bio: props.credentials.bio ? props.credentials.bio : '',
+      location: props.credentials.location ? props.credentials.location : '',
+      website: props.credentials.website ? props.credentials.website : ''
     })
   }
 
@@ -91,7 +94,7 @@ const EditDetails = (props) => {
 
   return (
     <React.Fragment>
-      <Typography variant="body1" component="p" onClick={openHandler}>Edit profile details</Typography>
+      <Typography variant="body1" component="p" onClick={openHandler} className={classes.anchorEl}>Edit profile details</Typography>
       <Dialog open={state.isOpen} onClose={closeHandler}>
         <Paper className={classes.dialogBody}>
           <DialogTitle className={classes.title}>Edit your details</DialogTitle>
