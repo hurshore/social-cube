@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 //dayjs
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -11,7 +11,7 @@ import CustomButton from '../../UI/CustomButton/CustomButton';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link'
+// import Link from '@material-ui/core/Link'
 //Icons
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -55,6 +55,9 @@ const styles = (theme) => ({
     top: 0,
     right: 0,
     color: 'red'
+  },
+  link: {
+    color: '#1976d2'
   }
 })
 
@@ -74,13 +77,13 @@ const comment = (props) => {
     <div className={classes.comment}>
       <div className={classes.imageBox}>
         <div className={classes.imageContainer}>
-          <Link href={`/users/${userHandle}`}>
+          <Link to={`/users/${userHandle}`}>
             <img src={imageUrl} alt="user" />
           </Link>
         </div>
       </div>
       <div className={classes.commentDetails}>
-        <Link href={`/users/${userHandle}`}>
+        <Link to={`/users/${userHandle}`} className={classes.link}>
           <Typography variant="body1" className={classes.handle}>{userHandle}</Typography>
         </Link>
         <Typography className={classes.timestamp}>{dayjs(createdAt).fromNow()}</Typography>

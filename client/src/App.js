@@ -26,6 +26,9 @@ import CSSBaseline from '@material-ui/core/CssBaseline';
 
 axios.defaults.baseURL = 'https://europe-west1-socialio-a0744.cloudfunctions.net/api';
 
+console.log(process.env.REACT_APP_VAPID_PUBLIC_KEY);
+console.log('Something');
+
 function App(props) {
   const themeContext = useContext(ThemeContext);
 

@@ -1,9 +1,14 @@
 const functions = require('firebase-functions');
 const app = require('express')();
 const { db } = require('./utility/admin');
+const webpush = require('web-push');
 require('firebase/storage');
 const cors = require('cors');
 app.use(cors({origin: true}))
+require("dotenv").config();
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+webpush.setVapidDetails('mailto: oshotofunmi@gmail.com', vapidPublicKey, vapidPrivateKey);
 
 const {
   getAllTweets,
@@ -28,7 +33,8 @@ const {
   uploadBackgroundImage,
   markNotificationsRead,
   getUserDetails,
-  getAuthenticatedUser
+  getAuthenticatedUser,
+  savePushSub
 } = require('./handlers/users');
 const FBAuth = require('./utility/FBAuth');
 const { admin } = require('./utility/admin');
@@ -57,6 +63,7 @@ app.post('/user', FBAuth, addUserDetails);
 app.post('/user/image', FBAuth, uploadUserImage);
 app.post('/user/background-image', FBAuth, uploadBackgroundImage);
 app.post('/notifications', FBAuth, markNotificationsRead);
+app.post('/push-notification', FBAuth, savePushSub);
 
 exports.api = functions.region('europe-west1').https.onRequest(app);
 
@@ -89,9 +96,15 @@ exports.onTweetDelete = functions.firestore.document('tweets/{tweetId}')
 
 exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
   .onCreate(snapshot => {
+    let recipient;
+    let sender;
+    let tweetId;
     return db.doc(`/tweets/${snapshot.data().tweetId}`).get()
       .then(doc => {
         if(doc.exists && doc.data().userHandle !== snapshot.data().userHandle) {
+          recipient = doc.data().userHandle;
+          sender = snapshot.data().userHandle;
+          tweetId = doc.id;
           return db.doc(`/notifications/${snapshot.id}`).set({
             recipient: doc.data().userHandle,
             sender: snapshot.data().userHandle,
@@ -99,6 +112,28 @@ exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
             type: 'like',
             read: false,
             createdAt: new Date().toISOString()
+          })
+          .then(() => {
+            return db.collection('subscriptions').where('handle', '==', recipient).get();
+          })
+          .then((data) => {
+            if(!data.empty) {
+              data.forEach((doc) => {
+                const pushConfig = {
+                  endpoint: doc.data().endpoint,
+                  keys: doc.data().keys
+                }
+  
+                webpush.sendNotification(pushConfig, JSON.stringify({
+                  title: 'New notification',
+                  content: `@${sender} liked your tweet`,
+                  openUrl: `/users/${recipient}/tweet/${tweetId}`
+                }))
+              })
+            }
+          })
+          .catch((err) => {
+            console.log(err);
           })
         }
       })
@@ -115,9 +150,15 @@ exports.deleteNotificationOnUnlike = functions.firestore.document('likes/{id}')
 
 exports.createNotificationOnComment = functions.firestore.document('comments/{id}')
   .onCreate(snapshot => {
+    let recipient;
+    let sender;
+    let tweetId;
     return db.doc(`/tweets/${snapshot.data().tweetId}`).get()
       .then(doc => {
         if(doc.exists && doc.data().userHandle !== snapshot.data().userHandle) {
+          recipient = doc.data().userHandle;
+          sender = snapshot.data().userHandle;
+          tweetId = doc.id;
           return db.doc(`/notifications/${snapshot.id}`).set({
             recipient: doc.data().userHandle,
             sender: snapshot.data().userHandle,
@@ -125,6 +166,25 @@ exports.createNotificationOnComment = functions.firestore.document('comments/{id
             type: 'comment',
             read: false,
             createdAt: new Date().toISOString()
+          })
+          .then(() => {
+            return db.collection('subscriptions').where('handle', '==', recipient).get();
+          })
+          .then((data) => {
+            if(!data.empty) {
+              data.forEach((doc) => {
+                const pushConfig = {
+                  endpoint: doc.data().endpoint,
+                  keys: doc.data().keys
+                }
+  
+                webpush.sendNotification(pushConfig, JSON.stringify({
+                  title: 'New notification',
+                  content: `@${sender} commented on your tweet`,
+                  openUrl: `/users/${recipient}/tweet/${tweetId}`
+                }))
+              })
+            }
           })
         }
       })
@@ -139,6 +199,8 @@ exports.deleteNotificationOnCommentDelete = functions.firestore.document('commen
 
 exports.createNotificationOnFollow = functions.firestore.document('followers/{id}')
   .onCreate(snapshot => {
+    const recipient = snapshot.data().following;;
+    const sender = snapshot.data().follower;
     return db.doc(`/users/${snapshot.data().following}`).get()
       .then(doc => {
         if(doc.exists) {
@@ -148,6 +210,25 @@ exports.createNotificationOnFollow = functions.firestore.document('followers/{id
             type: 'follow',
             read: false,
             createdAt: new Date().toISOString()
+          })
+          .then(() => {
+            return db.collection('subscriptions').where('handle', '==', recipient).get();
+          })
+          .then((data) => {
+            if(!data.empty) {
+              data.forEach((doc) => {
+                const pushConfig = {
+                  endpoint: doc.data().endpoint,
+                  keys: doc.data().keys
+                }
+  
+                webpush.sendNotification(pushConfig, JSON.stringify({
+                  title: 'New notification',
+                  content: `@${sender} followed you`,
+                  openUrl: `/users/${sender}`
+                }))
+              })
+            }
           })
         }
       })

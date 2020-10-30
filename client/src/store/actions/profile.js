@@ -62,8 +62,6 @@ export const uploadUserImage = (payload) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        // dispatch(fetchProfileDetails(payload.handle));
-        // dispatch(actions.getUserData(payload.FBIdToken));
         dispatch(uploadUserImageSuccess(data));
       } else {
         const err = await res.clone().json();
@@ -98,8 +96,6 @@ export const uploadBackgroundImage = (payload) => {
     .then(async (res) => {
       if(res.ok) {
         const data = await res.json();
-        // dispatch(fetchProfileDetails(payload.handle));
-        // dispatch(actions.getUserData(payload.FBIdToken));
         dispatch(uploadBackgroundImageSuccess(data));
       } else {
         const err = await res.clone().json();

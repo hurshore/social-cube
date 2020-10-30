@@ -434,3 +434,18 @@ exports.unfollowUser = (req, res) => {
       return res.status(500).json({ error: err.code });
     })
 }
+
+//Save push subscription
+exports.savePushSub = (req, res) => {
+  db.collection('subscriptions').add({
+    ...req.body,
+    handle: req.user.handle
+  })
+  .then(() => {
+    return res.json({ message: 'Successfully subscribed' })
+  })
+  .catch((err) => {
+    console.error(err);
+    return res.status(500).json({ error: err });
+  })
+}

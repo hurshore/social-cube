@@ -4,7 +4,11 @@ import * as actionTypes from './actionTypes';
 export const fetchTweets = () => {
   return dispatch => {
     dispatch(fetchTweetsStart());
-    fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweets')
+    fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweets', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    })
       .then((res) => {
         return res.json();
       })
@@ -47,7 +51,11 @@ export const clearTweets = () => {
 export const fetchTweet = (tweetId) => {
   return dispatch => {
     dispatch(fetchTweetStart());
-    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${tweetId}`)
+    fetch(`https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweet/${tweetId}`, {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    })
       .then(async (res) => {
         if(res.ok) {
           const data = await res.json();
@@ -80,7 +88,11 @@ const fetchTweetSuccess = (data) => {
 export const fetchPopularTweets = () => {
   return dispatch => {
     dispatch(fetchPopularTweetsStart());
-    fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweets/popular')
+    fetch('https://europe-west1-socialio-a0744.cloudfunctions.net/api/tweets/popular', {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    })
       .then((res) => {
         return res.json();
       })
