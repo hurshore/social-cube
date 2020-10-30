@@ -4,6 +4,7 @@ import * as actions from '../../store/actions';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 //Components
 import TweetDialog from '../Tweet/TweetDialog';
 //MUI stuff
@@ -13,6 +14,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 //Icons
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -53,14 +55,20 @@ const popularTweet = (props) => {
     return like.tweetId === props.tweetId;
   })
 
+  const redirectToUser = () => {
+    props.history.push(`/users/${props.userHandle}`);
+  }
+
   return (
     <Card className={classes.tweet}>
       <CardHeader
         className={classes.cardHeader}
         avatar={
-          <Avatar src={props.userImageUrl} alt="user" className={classes.avatar} />
+          <Avatar src={props.userImageUrl} alt="user" onClick={redirectToUser} />
         }
-        title={props.userHandle}
+        title={
+          <Typography onClick={redirectToUser}>{props.userHandle}</Typography>
+        }
         subheader={dayjs(props.createdAt).fromNow()}
       />
       <CardActions disableSpacing className={classes.cardFooter}>
@@ -101,4 +109,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(popularTweet));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withRouter(popularTweet)));
