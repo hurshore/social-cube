@@ -6,7 +6,7 @@ const { validateSignupData, validateLoginData, reduceUserDetails } = require('..
 exports.signup = (req, res) => {
   const newUser = {
     fullName: req.body.fullName,
-    handle: req.body.handle.toLowerCase(),
+    handle: req.body.handle.toLowerCase().trim(),
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword

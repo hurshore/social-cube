@@ -15,7 +15,7 @@ exports.validateSignupData = (data) => {
   let errors = {};
   if(isEmpty(data.fullName)) errors.fullName = 'Must not be empty';
   if(isEmpty(data.handle)) errors.handle = 'Must not be empty';
-  if(data.handle.trim().indexOf(' ') > -1) errors.handle = 'Invalid user handle'
+  if(data.handle.trim().indexOf('@') > -1) errors.handle = 'Invalid user handle'
   if(isEmpty(data.email)){
     errors.email = 'Must not be empty'
   } else if(!isEmail(data.email)){
