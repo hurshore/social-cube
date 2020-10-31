@@ -55,7 +55,7 @@ const Notifications = (props) => {
   }
 
   const configurePushSub = () => {
-    if(!'serviceWorker' in navigator) {
+    if(!('serviceWorker' in navigator)) {
       return;
     }
     let reg;
